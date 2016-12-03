@@ -7,47 +7,100 @@ export default class News extends Component {
     super(props);
     this.state = {
       topStoriesIds: [],
-      topStories: []
+      topStories: [],
+      totalStoriesIds: [],
+      pageNo: 0
     };
   }
   
   componentWillMount() {
-
+/*
     let axiosGets = [];
 
     const getItem = (itemId) => {
       return axiosGets.push(axios.get('https://hacker-news.firebaseio.com/v0/item/' + itemId + '.json?print=pretty'));
     }
-
+*/
     const url = 'https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty';
 
     axios.get(url).then(res => {
       
-      this.setState({topStoriesIds: res.data.slice(0,30)})
-      //console.log('sfsd:', this.state.topStoriesIds);
+      this.setState({totalStoriesIds: res.data});
+     /* this.setState({topStoriesIds: res.data.slice(0,30)});
       this.state.topStoriesIds.forEach(getItem);
-      //console.log('gg:', axiosGets.length, axiosGets[0])
       axios.all(axiosGets).then((result) => {
+
         let topStories = [];
-       // console.log('ehh: ', result)
         result.forEach((resultItem) => {
           topStories.push(resultItem.data);
-          })
+        })
+
         this.setState({topStories: topStories});
-        console.log('len: ', this.state.topStories)
+        //console.log('THIS: ', this)
+        //console.log('asdfff: ')
+        this.a() 
       });
+    */
+    this.getStoriesData();
     }); 
   }
- 
+
+  getStoriesData = () => {
+  console.log('called', this.state.pageNo)
+   let axiosGets = [];
+
+   const getItem = (itemId) => {
+      return axiosGets.push(axios.get('https://hacker-news.firebaseio.com/v0/item/' + itemId + '.json?print=pretty'));
+   }
+    const pageSize = 30;
+    let initialIndex = this.state.pageNo * pageSize; 
+    this.setState({topStoriesIds: this.state.totalStoriesIds.slice(initialIndex, initialIndex + pageSize)},() => {
+    console.log('happp: ', this.state.topStoriesIds[0])
+      this.state.topStoriesIds.forEach(getItem);
+      axios.all(axiosGets).then((result) => {
+
+        let topStories = [];
+        result.forEach((resultItem) => {
+          topStories.push(resultItem.data);
+        })
+
+        this.setState({topStories: topStories});
+      });
+   } );
+
+      //console.log(initialIndex, initialIndex + pageSize)
+  
+  }
+
+  
+  more = () => {
+
+  this.setState({pageNo: this.state.pageNo + 1}, () => {
+
+    this.getStoriesData();
+  });
+ }
+
+ previous = () => {
+
+  this.setState({pageNo: this.state.pageNo - 1}, () => {
+
+    this.getStoriesData();
+  });
+ }
+
   render() {
     return (
-    <ol>
+   <div>
+    <ol start={ this.state.pageNo * 30 + 1 }>
      {this.state.topStories.map(topStories => 
-     <li key={topStories.id}><a href={ topStories.url }>{topStories.title}</a> by { topStories.by }</li>
+     <li key={topStories.id}><a href={ topStories.url }>{topStories.title}</a> by { topStories.by } Score: { topStories.score }</li>
      )}
    </ol>
+    <a onClick={this.more}>More</a> 
+
+    { this.state.pageNo > 0 && <a onClick={this.previous}>Previous</a> }
+   </div>
     );
   }
 }
-
-//export default News;
