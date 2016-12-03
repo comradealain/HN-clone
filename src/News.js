@@ -11,6 +11,8 @@ export default class News extends Component {
       totalStoriesIds: [],
       pageNo: 0
     };
+
+    this.pageSize = 30;
   }
   
   componentWillMount() {
@@ -25,7 +27,10 @@ export default class News extends Component {
 
     axios.get(url).then(res => {
       
-      this.setState({totalStoriesIds: res.data});
+      this.setState({totalStoriesIds: res.data}, () => {
+
+        this.getStoriesData();
+      });
      /* this.setState({topStoriesIds: res.data.slice(0,30)});
       this.state.topStoriesIds.forEach(getItem);
       axios.all(axiosGets).then((result) => {
@@ -41,35 +46,33 @@ export default class News extends Component {
         this.a() 
       });
     */
-    this.getStoriesData();
+    //this.getStoriesData();
     }); 
   }
 
   getStoriesData = () => {
   console.log('called', this.state.pageNo)
+
    let axiosGets = [];
 
-   const getItem = (itemId) => {
-      return axiosGets.push(axios.get('https://hacker-news.firebaseio.com/v0/item/' + itemId + '.json?print=pretty'));
-   }
-    const pageSize = 30;
-    let initialIndex = this.state.pageNo * pageSize; 
-    this.setState({topStoriesIds: this.state.totalStoriesIds.slice(initialIndex, initialIndex + pageSize)},() => {
-    console.log('happp: ', this.state.topStoriesIds[0])
-      this.state.topStoriesIds.forEach(getItem);
-      axios.all(axiosGets).then((result) => {
+     const getItem = (itemId) => {
+       return axiosGets.push(axios.get('https://hacker-news.firebaseio.com/v0/item/' + itemId + '.json?print=pretty'));
+     }
 
-        let topStories = [];
-        result.forEach((resultItem) => {
-          topStories.push(resultItem.data);
-        })
-
-        this.setState({topStories: topStories});
-      });
-   } );
-
-      //console.log(initialIndex, initialIndex + pageSize)
-  
+     let initialIndex = this.state.pageNo * this.pageSize; 
+     this.setState({topStoriesIds: this.state.totalStoriesIds.slice(initialIndex, initialIndex + this.pageSize)},() => {
+     console.log('happp: ', this.state.topStoriesIds[0])
+       this.state.topStoriesIds.forEach(getItem);
+       axios.all(axiosGets).then((result) => {
+ 
+         let topStories = [];
+         result.forEach((resultItem) => {
+           topStories.push(resultItem.data);
+         })
+ 
+         this.setState({topStories: topStories});
+       });
+    });
   }
 
   
@@ -92,7 +95,7 @@ export default class News extends Component {
   render() {
     return (
    <div>
-    <ol start={ this.state.pageNo * 30 + 1 }>
+    <ol start={ this.state.pageNo * this.pageSize + 1 }>
      {this.state.topStories.map(topStories => 
      <li key={topStories.id}><a href={ topStories.url }>{topStories.title}</a> by { topStories.by } Score: { topStories.score }</li>
      )}
