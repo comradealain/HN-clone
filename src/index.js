@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import News from './News';
 import { Router, Route, browserHistory } from 'react-router';
-import './index.css';
 
 ReactDOM.render((
   <Router history={browserHistory}>
