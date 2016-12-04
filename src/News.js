@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import './News.css';
 //import { Link } from 'react-router';
 
 export default class News extends Component {
@@ -16,13 +17,7 @@ export default class News extends Component {
   }
   
   componentWillMount() {
-/*
-    let axiosGets = [];
 
-    const getItem = (itemId) => {
-      return axiosGets.push(axios.get('https://hacker-news.firebaseio.com/v0/item/' + itemId + '.json?print=pretty'));
-    }
-*/
     const url = 'https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty';
 
     axios.get(url).then(res => {
@@ -31,22 +26,6 @@ export default class News extends Component {
 
         this.getStoriesData();
       });
-     /* this.setState({topStoriesIds: res.data.slice(0,30)});
-      this.state.topStoriesIds.forEach(getItem);
-      axios.all(axiosGets).then((result) => {
-
-        let topStories = [];
-        result.forEach((resultItem) => {
-          topStories.push(resultItem.data);
-        })
-
-        this.setState({topStories: topStories});
-        //console.log('THIS: ', this)
-        //console.log('asdfff: ')
-        this.a() 
-      });
-    */
-    //this.getStoriesData();
     }); 
   }
 
@@ -100,9 +79,9 @@ export default class News extends Component {
      <li key={topStories.id}><a href={ topStories.url }>{topStories.title}</a> by { topStories.by } Score: { topStories.score }</li>
      )}
    </ol>
-    <a onClick={this.more}>More</a> 
+    <button onClick={this.more}>More</button> 
 
-    { this.state.pageNo > 0 && <a onClick={this.previous}>Previous</a> }
+    { this.state.pageNo > 0 && <button onClick={this.previous}>Previous</button> }
    </div>
     );
   }
