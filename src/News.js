@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import './News.css';
 //import { Link } from 'react-router';
 
@@ -30,57 +31,6 @@ export default class News extends Component {
       this.setState({topStories: res.data});
     });  
   }
-  getNewStoriesData = () => {
-  console.log('called', this.state.pageNo)
-/*
-   let axiosGets = [];
-
-     const getItem = (itemId) => {
-       return axiosGets.push(axios.get('https://hacker-news.firebaseio.com/v0/item/' + itemId + '.json?print=pretty'));
-     }
-
-     let initialIndex = this.state.pageNo * this.pageSize; 
-     this.setState({topStoriesIds: this.state.totalStoriesIds.slice(initialIndex, initialIndex + this.pageSize)},() => {
-     console.log('happp: ', this.state.topStoriesIds[0])
-       this.state.topStoriesIds.forEach(getItem);
-       axios.all(axiosGets).then((result) => {
- 
-         let topStories = [];
-         result.forEach((resultItem) => {
-           topStories.push(resultItem.data);
-         })
- 
-         this.setState({topStories: topStories});
-       });
-    });
-    */
-     
-  }
-  getStoriesData = () => {
-  console.log('called', this.state.pageNo)
-
-   let axiosGets = [];
-
-     const getItem = (itemId) => {
-       return axiosGets.push(axios.get('https://hacker-news.firebaseio.com/v0/item/' + itemId + '.json?print=pretty'));
-     }
-
-     let initialIndex = this.state.pageNo * this.pageSize; 
-     this.setState({topStoriesIds: this.state.totalStoriesIds.slice(initialIndex, initialIndex + this.pageSize)},() => {
-     console.log('happp: ', this.state.topStoriesIds[0])
-       this.state.topStoriesIds.forEach(getItem);
-       axios.all(axiosGets).then((result) => {
- 
-         let topStories = [];
-         result.forEach((resultItem) => {
-           topStories.push(resultItem.data);
-         })
- 
-         this.setState({topStories: topStories});
-       });
-    });
-  }
-
   
   more = () => {
 
@@ -98,7 +48,7 @@ export default class News extends Component {
 
  getFavicon = (domain) => {
    let faviconUrl = "http://www.google.com/s2/favicons?domain_url=" + domain;
-   return <img src={faviconUrl} />;
+   return <img alt={ domain } src={faviconUrl} />;
  }
 
   render() {
@@ -106,17 +56,20 @@ export default class News extends Component {
    <div>
     <ol start={ this.state.pageNo * this.pageSize + 1 }>
      {this.state.topStories.map(topStories => 
-     <li key={topStories.id}>
-     <div id="story">
-     <a href={ topStories.url }>{topStories.title}</a> by { topStories.user } Score: { topStories.points }
-     <p> { this.getFavicon(topStories.domain) } {topStories.domain} </p>
+     <li id="story" key={topStories.id}>
+     <div>
+     <a href={ topStories.url }>{topStories.title}</a> (<Link id="comments" to="/item">{ topStories.comments_count } comments</Link>)
+     <p> { this.getFavicon(topStories.domain) } <a id="domain" href={ topStories.domain}> {topStories.domain} </a> | by { topStories.user } | Score: {topStories.points} </p>
      </div>
      </li>
      )}
    </ol>
     <button onClick={this.more}>More</button> 
-
     { this.state.pageNo > 0 && <button onClick={this.previous}>Previous</button> }
+    <Link to={{
+      pathname: "/item",
+      state: { pageNo: this.state.pageNo }
+    }}> LOL </Link>
    </div>
     );
   }

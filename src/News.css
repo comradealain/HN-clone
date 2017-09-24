@@ -10,3 +10,30 @@ body {
   width: 1000px;
   border-bottom: 1px solid;
 }
+
+#comments {
+  text-decoration: none;
+  color: #62707c;
+}
+a#comments:hover {
+  text-decoration: underline; 
+  color: black;
+}
+
+a:visited {
+  color: #62707c;
+}
+
+li {
+  background: #ecf1f7;
+}
+
+a {
+  text-decoration: none;
+  color: #000000;
+}
+
+a#domain {
+  
+  color: #62707c;
+}

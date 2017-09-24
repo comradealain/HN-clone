@@ -1,11 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import News from './News';
+import Item from './Item';
 import { Router, Route, browserHistory } from 'react-router';
-
+import { BrowserRouter,Switch } from 'react-router-dom';
 ReactDOM.render((
-  <Router history={browserHistory}>
-   <Route path="/" component={News} />
+   <BrowserRouter>
+   <Switch>
+   <Route exact path="/" component={News} />
    {/*<Route path="news" component={News} />*/}
-  </Router>
+   <Route path="/item" component={Item} />
+   </Switch>
+   </BrowserRouter>
 ), document.getElementById('root'));
