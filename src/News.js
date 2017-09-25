@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './News.css';
-//import { Link } from 'react-router';
 
 export default class News extends Component {
   constructor(props) {
@@ -18,16 +17,14 @@ export default class News extends Component {
   }
   
   componentWillMount() {
-    this.fetchStories(this.state.pageNo);
+    this.fetchStories();
   }
 
 
-  fetchStories = (pageNo) => {
+  fetchStories = () => {
  const url = 'http://api.hackerwebapp.com/news?page=' + (this.state.pageNo + 1);
- console.log(url)
     axios.get(url).then(res => {
       
-            console.log(res.data)
       this.setState({topStories: res.data});
     });  
   }
@@ -55,11 +52,12 @@ export default class News extends Component {
     return (
    <div>
     <ol start={ this.state.pageNo * this.pageSize + 1 }>
-     {this.state.topStories.map(topStories => 
-     <li id="story" key={topStories.id}>
+     {this.state.topStories.map(story => 
+     <li id="story" key={story.id}>
      <div>
-     <a href={ topStories.url }>{topStories.title}</a> (<Link id="comments" to="/item">{ topStories.comments_count } comments</Link>)
-     <p> { this.getFavicon(topStories.domain) } <a id="domain" href={ topStories.domain}> {topStories.domain} </a> | by { topStories.user } | Score: {topStories.points} </p>
+     <a href={ story.url }>{story.title}</a> 
+     (<Link id="comments" to={{ pathname: "/item/"+story.id, state: { pageNo: this.state.pageNo }}}>{ story.comments_count } comments</Link>)
+     <p> { this.getFavicon(story.domain) } <a id="domain" href={ story.domain}> {story.domain} </a> | by { story.user } | Score: {story.points} </p>
      </div>
      </li>
      )}

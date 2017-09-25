@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import News from './News';
 import Item from './Item';
-import { Router, Route, browserHistory } from 'react-router';
+import { Route } from 'react-router';
 import { BrowserRouter,Switch } from 'react-router-dom';
 ReactDOM.render((
    <BrowserRouter>
